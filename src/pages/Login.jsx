@@ -115,8 +115,7 @@ const Login = () => {
         </div>
 
         {/* Google Login Button */}
-        <a
-          href="http://localhost:8080/oauth2/authorization/google"
+        <a href="http://localhost:8080/oauth2/authorization/google"
           className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded py-2 hover:bg-gray-50 transition"
         >
           <img
