@@ -1,121 +1,331 @@
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const { register } = useAuth();
-  const [form, setForm] = useState({
-    name: '', email: '', password: '', role: 'TRAVELER'
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "TRAVELER",
+  });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
-    setError('');
-    const result = await register(
-      form.name, form.email, form.password, form.role
-    );
-    if (!result.success) setError(result.message);
-    setLoading(false);
+    setError("");
+
+    try {
+      const result = await register(
+        form.name,
+        form.email,
+        form.password,
+        form.role
+      );
+
+      if (!result.success) {
+        setError(result.message);
+      }
+    } catch (err) {
+      console.error("Register error:", err);
+      setError("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
-          ✈️ TripNest Register
-        </h2>
+    <div className="tn-auth-page">
 
-        {error && (
-          <div className="bg-red-100 text-red-600 p-3 rounded mb-4 text-sm">
-            {error}
-          </div>
-        )}
+      {/* LEFT SIDE */}
+      <section className="tn-auth-left">
+        <div className="tn-auth-overlay"></div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your name here"
-              required
-            />
-          </div>
+        <div className="tn-auth-left-content">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email here"
-              required
-            />
-          </div>
+          {/* LOGO */}
+          <Link to="/login" className="tn-auth-logo">
+            <span className="tn-auth-logo-icon">✈</span>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role
-            </label>
-            <select
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="TRAVELER">Traveler</option>
-              <option value="GROUP_ADMIN">Group Admin</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600 mt-4">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login here
+            <span>
+              TripNest
+            </span>
           </Link>
-        </p>
-      </div>
+
+          {/* CONTENT */}
+          <div className="tn-auth-left-main">
+
+            <h1>
+              Your next
+              <br />
+              <span>adventure awaits.</span>
+            </h1>
+
+            <p className="tn-auth-description">
+              Create your TripNest account and turn your
+              travel ideas into beautifully organized journeys.
+            </p>
+
+            {/* FEATURES */}
+            <div className="tn-auth-features">
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">🌍</div>
+                <strong>Explore</strong>
+                <small>Discover amazing destinations</small>
+              </div>
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">🗺️</div>
+                <strong>Plan</strong>
+                <small>Organize your perfect trip</small>
+              </div>
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">❤️</div>
+                <strong>Remember</strong>
+                <small>Keep your journeys forever</small>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* RIGHT SIDE */}
+      <section className="tn-auth-right">
+
+        <div className="tn-auth-card-new">
+
+          {/* MOBILE LOGO */}
+          <div className="tn-mobile-auth-brand">
+            <span>✈</span>
+            <strong>TripNest</strong>
+          </div>
+
+
+          {/* HEADING */}
+          <div className="tn-auth-heading">
+
+            <div className="tn-auth-heading-icon">
+              ✨
+            </div>
+
+            <div>
+              <h2>Create your account</h2>
+
+              <p>
+                Join TripNest and start planning your next adventure.
+              </p>
+            </div>
+
+          </div>
+
+
+          {/* ERROR */}
+          {error && (
+            <div className="tn-auth-error">
+              ⚠️ {error}
+            </div>
+          )}
+
+
+          {/* FORM */}
+          <form
+            className="tn-auth-form"
+            onSubmit={handleSubmit}
+          >
+
+            {/* NAME */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="register-name">
+                Full name
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  👤
+                </span>
+
+                <input
+                  id="register-name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      name: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+              </div>
+            </div>
+
+
+            {/* EMAIL */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="register-email">
+                Email address
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  ✉️
+                </span>
+
+                <input
+                  id="register-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      email: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+              </div>
+            </div>
+
+
+            {/* PASSWORD */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="register-password">
+                Password
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="register-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a secure password"
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      password: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="tn-password-toggle"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+
+              </div>
+
+              <div className="tn-password-hint">
+                🔐 Use at least 8 characters for better security.
+              </div>
+
+            </div>
+
+
+            {/* ROLE */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="register-role">
+                Account type
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  🎒
+                </span>
+
+                <select
+                  id="register-role"
+                  value={form.role}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      role: e.target.value,
+                    })
+                  }
+                >
+                  <option value="TRAVELER">
+                    Traveler
+                  </option>
+
+                  <option value="GROUP_ADMIN">
+                    Group Admin
+                  </option>
+
+                  <option value="ADMIN">
+                    Admin
+                  </option>
+                </select>
+
+              </div>
+
+            </div>
+
+
+            {/* BUTTON */}
+            <button
+              className="tn-auth-submit"
+              type="submit"
+              disabled={loading}
+            >
+              {loading
+                ? "Creating account..."
+                : "Create account →"}
+            </button>
+
+          </form>
+
+
+          {/* LOGIN LINK */}
+          <div className="tn-auth-bottom">
+
+            <span>
+              Already have an account?{" "}
+            </span>
+
+            <Link to="/login">
+              Sign in →
+            </Link>
+
+          </div>
+
+        </div>
+
+      </section>
+
     </div>
   );
 };

@@ -5,141 +5,291 @@ import { Link } from "react-router-dom";
 const Login = () => {
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await login(
+        form.email,
+        form.password
+      );
 
       if (!result.success) {
         setError(result.message);
       }
     } catch (err) {
-      console.error("Login error:", err);
+      console.error(err);
       setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  // GOOGLE LOGIN
+  const handleGoogleLogin = () => {
+    window.location.href =
+      "http://localhost:8080/oauth2/authorization/google";
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Login Card */}
-      <div className="w-full max-w-md bg-white p-8 sm:p-12 rounded-[20px] border border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.15)] animate-[slideUp_0.6s_ease-out]">
-        {/* Heading */}
-        <h2 className="text-center text-4xl font-bold mb-2 bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
-          ✈️ TripNest Login
-        </h2>
+    <div className="tn-auth-page">
 
-        <p className="text-center text-slate-500 text-sm mb-8">
-          Welcome back! Login to continue your journey.
-        </p>
+      {/* LEFT SIDE */}
+      <section className="tn-auth-left">
+        <div className="tn-auth-overlay"></div>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-gradient-to-br from-red-100 to-red-200 text-red-800 px-4 py-3 rounded-xl mb-4 text-center border border-red-300 font-medium">
-            {error}
+        <div className="tn-auth-left-content">
+
+          {/* LOGO */}
+          <Link to="/login" className="tn-auth-logo">
+            <span className="tn-auth-logo-icon">
+              ✈
+            </span>
+
+            <span>TripNest</span>
+          </Link>
+
+          {/* MAIN CONTENT */}
+          <div className="tn-auth-left-main">
+
+            <h1>
+              Travel more.
+              <br />
+              <span>Remember more.</span>
+            </h1>
+
+            <p className="tn-auth-description">
+              Plan unforgettable journeys, discover amazing
+              destinations, and keep all your travel plans
+              organized in one place.
+            </p>
+
+            {/* FEATURES */}
+            <div className="tn-auth-features">
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">
+                  🌍
+                </div>
+
+                <strong>Explore</strong>
+
+                <small>
+                  Discover amazing destinations
+                </small>
+              </div>
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">
+                  🗺️
+                </div>
+
+                <strong>Plan</strong>
+
+                <small>
+                  Build your perfect itinerary
+                </small>
+              </div>
+
+              <div className="tn-auth-feature">
+                <div className="tn-feature-icon">
+                  ❤️
+                </div>
+
+                <strong>Remember</strong>
+
+                <small>
+                  Save your favorite journeys
+                </small>
+              </div>
+
+            </div>
           </div>
-        )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Email
-            </label>
+        </div>
+      </section>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl text-base bg-slate-50 transition-all duration-300 focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
-            />
+
+      {/* RIGHT SIDE */}
+      <section className="tn-auth-right">
+
+        <div className="tn-auth-card-new">
+
+          {/* HEADING */}
+          <div className="tn-auth-heading">
+
+            <div className="tn-auth-heading-icon">
+              👋
+            </div>
+
+            <div>
+              <h2>Welcome back</h2>
+
+              <p>
+                Sign in to continue your journey.
+              </p>
+            </div>
+
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Password
-            </label>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl text-base bg-slate-50 transition-all duration-300 focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
-            />
-          </div>
+          {/* ERROR */}
+          {error && (
+            <div className="tn-auth-error">
+              ⚠️ {error}
+            </div>
+          )}
 
-          {/* Login Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-2 px-4 py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white text-base font-semibold shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+
+          {/* EMAIL LOGIN */}
+          <form
+            className="tn-auth-form"
+            onSubmit={handleSubmit}
           >
-            {loading ? "Logging in..." : "Login"}
+
+            {/* EMAIL */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="login-email">
+                Email address
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  ✉️
+                </span>
+
+                <input
+                  id="login-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      email: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+              </div>
+
+            </div>
+
+
+            {/* PASSWORD */}
+            <div className="tn-auth-field">
+
+              <label htmlFor="login-password">
+                Password
+              </label>
+
+              <div className="tn-auth-input-wrap">
+
+                <span className="tn-input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="login-password"
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
+                  placeholder="Enter your password"
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      password: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="tn-password-toggle"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+
+              </div>
+
+            </div>
+
+
+            {/* SIGN IN */}
+            <button
+              className="tn-auth-submit"
+              type="submit"
+              disabled={loading}
+            >
+              {loading
+                ? "Signing in..."
+                : "Sign in →"}
+            </button>
+
+          </form>
+
+
+          {/* DIVIDER */}
+          <div className="tn-auth-divider">
+            <span>OR</span>
+          </div>
+
+
+          {/* GOOGLE */}
+          <button
+            type="button"
+            className="tn-google-button"
+            onClick={handleGoogleLogin}
+          >
+
+            <span className="tn-google-icon">
+              G
+            </span>
+
+            <span>
+              Continue with Google
+            </span>
+
           </button>
-        </form>
-        {/* Divider */}
-        <div className="flex items-center my-4">
-          <div className="flex-1 border-t border-gray-300"></div>
 
-          <span className="px-3 text-sm text-gray-500">ya</span>
 
-          <div className="flex-1 border-t border-gray-300"></div>
+          {/* REGISTER */}
+          <div className="tn-auth-bottom">
+
+            Don't have an account?{" "}
+
+            <Link to="/register">
+              Create account →
+            </Link>
+
+          </div>
+
         </div>
 
-        {/* Google Login Button */}
-        <a href="http://localhost:8080/oauth2/authorization/google"
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded py-2 hover:bg-gray-50 transition"
-        >
-          <img
-            src="https://www.google.com/favicon.ico"
-            alt="Google"
-            className="w-5 h-5"
-          />
+      </section>
 
-          <span className="text-sm font-medium text-gray-700">
-            Login with Google
-          </span>
-        </a>
-
-        {/* Register */}
-        <p className="text-center mt-6 text-slate-500">
-          Don't have an account?{" "}
-          <Link
-            to="/register"
-            className="text-indigo-500 font-semibold transition-colors duration-300 hover:text-pink-500 hover:underline"
-          >
-            Register here
-          </Link>
-        </p>
-      </div>
     </div>
   );
 };
